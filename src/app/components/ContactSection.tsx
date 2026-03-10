@@ -11,6 +11,17 @@ export function ContactSection() {
     message: "",
   });
 
+  const encode = (data: any) => {
+    return Object.keys(data)
+      .map(
+        (key) =>
+          encodeURIComponent(key) +
+          "=" +
+          encodeURIComponent(data[key])
+      )
+      .join("&");
+  };
+
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -23,14 +34,17 @@ export function ContactSection() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const form = e.currentTarget;
-    const formDataToSend = new FormData(form);
-
     try {
 
       await fetch("/", {
         method: "POST",
-        body: formDataToSend,
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: encode({
+          "form-name": "contact",
+          ...formData,
+        }),
       });
 
       toast.success("Message sent successfully! I'll get back to you soon.");
@@ -42,9 +56,7 @@ export function ContactSection() {
       });
 
     } catch (error) {
-
       toast.error("Failed to send message");
-
     }
   };
 
@@ -110,7 +122,7 @@ export function ContactSection() {
 
         <div className="grid md:grid-cols-2 gap-12 max-w-6xl mx-auto">
 
-          {/* Social Section */}
+          {/* Social Links */}
 
           <motion.div
             initial={{ opacity: 0, x: -50 }}
@@ -177,11 +189,16 @@ export function ContactSection() {
               name="contact"
               method="POST"
               data-netlify="true"
+              netlify-honeypot="bot-field"
               onSubmit={handleSubmit}
               className="bg-navy-card backdrop-blur-sm rounded-2xl p-8 border border-navy-surface space-y-6"
             >
 
               <input type="hidden" name="form-name" value="contact" />
+
+              <p hidden>
+                <input name="bot-field" />
+              </p>
 
               <div>
                 <label className="block text-white mb-2">Name</label>
