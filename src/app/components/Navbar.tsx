@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { Menu, X } from 'lucide-react';
 
@@ -10,24 +10,59 @@ export function Navbar() {
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50);
+    };
 
-      // Detect active section
-      const sections = ['home', 'about', 'projects', 'skills', 'gallery', 'contact'];
-      for (const section of sections) {
-        const element = document.getElementById(section);
-        if (element) {
-          const rect = element.getBoundingClientRect();
-          if (rect.top <= 100 && rect.bottom >= 100) {
-            setActiveSection(section);
-            break;
+    const observerOptions = {
+      root: null,
+      rootMargin: '-20% 0px -70% 0px',
+      threshold: [0, 0.1],
+    };
+
+    // Keep track of which sections are currently intersecting
+    const intersectingSections = new Set<string>();
+
+    const observerCallback = (entries: IntersectionObserverEntry[]) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          intersectingSections.add(entry.target.id);
+        } else {
+          intersectingSections.delete(entry.target.id);
+        }
+      });
+
+      // From the sections that are currently intersecting, pick the one that is furthest down the page
+      const sectionOrder = ['home', 'about', 'projects', 'skills', 'gallery', 'contact'];
+      let highestIndex = -1;
+      let mostRelevantSection = activeSection;
+
+      sectionOrder.forEach((id, index) => {
+        if (intersectingSections.has(id)) {
+          if (index > highestIndex) {
+            highestIndex = index;
+            mostRelevantSection = id;
           }
         }
+      });
+
+      if (mostRelevantSection !== activeSection) {
+        setActiveSection(mostRelevantSection);
       }
     };
 
+    const observer = new IntersectionObserver(observerCallback, observerOptions);
+
+    const sections = ['home', 'about', 'projects', 'skills', 'gallery', 'contact'];
+    sections.forEach((id) => {
+      const element = document.getElementById(id);
+      if (element) observer.observe(element);
+    });
+
     window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      observer.disconnect();
+    };
+  }, [activeSection]);
 
   const scrollToSection = (id: string) => {
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });

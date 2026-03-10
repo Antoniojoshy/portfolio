@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { AnimatePresence } from 'motion/react';
 import { Toaster } from 'sonner';
 import { Navbar } from './components/Navbar';
@@ -6,10 +6,10 @@ import { HeroSection } from './components/HeroSection';
 import { AboutSection } from './components/AboutSection';
 import { ProjectsSection } from './components/ProjectsSection';
 import { SkillsSection } from './components/SkillsSection';
-import { GallerySection } from './components/GallerySection';
+import { LoadingScreen } from './components/LoadingScreen';
+import { ThreeDCarouselGallery } from './components/ThreeDCarouselGallery';
 import { ContactSection } from './components/ContactSection';
 import { Footer } from './components/Footer';
-import { LoadingScreen } from './components/LoadingScreen';
 
 export default function App() {
     const [isLoading, setIsLoading] = useState(true);
@@ -38,7 +38,7 @@ export default function App() {
                         <AboutSection />
                         <ProjectsSection />
                         <SkillsSection />
-                        <GallerySection />
+                        <ThreeDCarouselGallery />
                         <ContactSection />
                         <Footer />
                     </div>

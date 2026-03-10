@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import { motion, useMotionValue, useSpring, useTransform } from "motion/react";
 
-export function Hero3D({ children }: { children: React.ReactNode }) {
+export function Hero3D({ children }: { children?: React.ReactNode }) {
   const containerRef = useRef<HTMLDivElement>(null);
 
   const mouseX = useMotionValue(0);

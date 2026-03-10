@@ -25,7 +25,7 @@ export function HeroSection() {
 
   return (
     <section id="home" className="relative h-screen w-full flex items-center justify-center overflow-hidden bg-navy-base">
-      <Hero3D />
+      <Hero3D>{}</Hero3D>
 
       <div className="absolute inset-0 bg-gradient-to-b from-navy-base/50 via-navy-base/30 to-navy-base/80 z-10" />
 
