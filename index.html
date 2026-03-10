@@ -6,8 +6,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Antonio Joshy | Portfolio</title>
   </head>
+
   <body>
+
     <div id="root"></div>
+
+    <!-- Netlify form detection -->
+    <form name="contact" data-netlify="true" hidden>
+      <input type="text" name="name" />
+      <input type="email" name="email" />
+      <textarea name="message"></textarea>
+    </form>
+
     <script type="module" src="/src/main.tsx"></script>
+
   </body>
 </html>
