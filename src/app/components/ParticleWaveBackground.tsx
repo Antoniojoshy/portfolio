@@ -1,4 +1,4 @@
-import React, { useRef, useMemo } from "react";
+import { useRef, useMemo } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 
@@ -83,93 +83,92 @@ gl_FragColor = vec4(vColor,(core + glow*0.4)*vOpacity);
    PARTICLE GRID
 ========================= */
 
-function ParticleGrid(){
+function ParticleGrid() {
 
-const group = useRef<THREE.Group>(null!);
-const { mouse, viewport } = useThree();
+  const group = useRef<THREE.Group>(null!);
+  const { mouse, viewport } = useThree();
 
-const isMobile = viewport.width < 12;
+  const isMobile = viewport.width < 12;
 
-const count = isMobile ? 500 : 2000;
+  const count = isMobile ? 250 : 2000;
 
-const side = Math.floor(Math.sqrt(count));
-const total = side * side;
+  const side = Math.floor(Math.sqrt(count));
+  const total = side * side;
 
-/* GRID STRUCTURE */
+  const positions = useMemo(() => {
 
-const positions = useMemo(()=>{
+    const arr = new Float32Array(total * 3);
 
-const arr = new Float32Array(total*3);
+    const spacing = 2.5;
 
-const spacing = 2.5;
+    let i = 0;
 
-let i = 0;
+    for (let x = 0; x < side; x++) {
+      for (let z = 0; z < side; z++) {
 
-for(let x=0;x<side;x++){
-for(let z=0;z<side;z++){
+        arr[i++] = (x - side / 2) * spacing;
+        arr[i++] = 0;
+        arr[i++] = (z - side / 2) * spacing;
 
-arr[i++] = (x - side/2) * spacing;
-arr[i++] = 0;
-arr[i++] = (z - side/2) * spacing;
+      }
+    }
 
-}}
+    return arr;
 
-return arr;
+  }, [side, total]);
 
-},[side,total]);
+  const uniforms = useMemo(() => ({
 
-const uniforms = useMemo(()=>({
+    uTime: { value: 0 },
+    uSize: { value: isMobile ? 5 : 7 },
+    uMouse: { value: new THREE.Vector2() }
 
-uTime:{value:0},
-uSize:{value:isMobile?5:7},
-uMouse:{value:new THREE.Vector2()}
+  }), [isMobile]);
 
-}),[isMobile]);
+  useFrame((state) => {
 
-useFrame((state)=>{
+    uniforms.uTime.value = state.clock.elapsedTime;
 
-uniforms.uTime.value = state.clock.elapsedTime;
+    uniforms.uMouse.value.set(
+      mouse.x * (viewport.width / 2),
+      mouse.y * (viewport.height / 2)
+    );
 
-uniforms.uMouse.value.set(
-mouse.x * (viewport.width/2),
-mouse.y * (viewport.height/2)
-);
+  });
 
-});
+  /* TILT GRID */
 
-/* TILT GRID */
+  return (
 
-return(
+    <group ref={group} rotation={[-0.45, 0, 0]}>
 
-<group ref={group} rotation={[-0.45,0,0]}>
+      <points>
 
-<points>
+        <bufferGeometry>
 
-<bufferGeometry>
+          <bufferAttribute
+            attach="attributes-position"
+            array={positions}
+            count={positions.length / 3}
+            itemSize={3}
+          />
 
-<bufferAttribute
-attach="attributes-position"
-array={positions}
-count={positions.length/3}
-itemSize={3}
-/>
+        </bufferGeometry>
 
-</bufferGeometry>
+        <shaderMaterial
+          vertexShader={vertexShader}
+          fragmentShader={fragmentShader}
+          uniforms={uniforms}
+          transparent
+          depthWrite={false}
+          blending={THREE.AdditiveBlending}
+        />
 
-<shaderMaterial
-vertexShader={vertexShader}
-fragmentShader={fragmentShader}
-uniforms={uniforms}
-transparent
-depthWrite={false}
-blending={THREE.AdditiveBlending}
-/>
+      </points>
 
-</points>
+    </group>
 
-</group>
-
-);
+  );
 
 }
 
@@ -179,25 +178,25 @@ blending={THREE.AdditiveBlending}
 
 export const ParticleWaveBackground = () => {
 
-return(
+  return (
 
-<div className="absolute inset-0 w-full h-full bg-[#020617] overflow-hidden">
+    <div className="absolute inset-0 w-full h-full bg-[#020617] overflow-hidden">
 
-<Canvas
-camera={{position:[0,25,60],fov:42}}
-dpr={[1,1.5]}
-gl={{antialias:true,powerPreference:"high-performance"}}
->
+      <Canvas
+        camera={{ position: [0, 25, 60], fov: 42 }}
+        dpr={[1, 1.5]}
+        gl={{ antialias: true, powerPreference: "high-performance" }}
+      >
 
-<ParticleGrid/>
+        <ParticleGrid />
 
-<fog attach="fog" args={["#020617",40,140]} />
+        <fog attach="fog" args={["#020617", 40, 140]} />
 
-</Canvas>
+      </Canvas>
 
-</div>
+    </div>
 
-);
+  );
 
 };
 

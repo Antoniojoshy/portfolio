@@ -32,15 +32,15 @@ export function AboutSection() {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="relative"
           >
-           <div className="relative rounded-2xl overflow-hidden shadow-2xl">
-  <div className="absolute inset-0 bg-gradient-to-br from-bronze/20 to-transparent z-10 pointer-events-none" />
+            <div className="relative rounded-2xl overflow-hidden shadow-2xl">
+              <div className="absolute inset-0 bg-gradient-to-br from-bronze/20 to-transparent z-10 pointer-events-none" />
 
-  <ImageWithFallback
-    src="/about-me.jpg"
-    alt="Antonio Joshy"
-    className="w-full h-full object-cover aspect-square"
-  />
-</div>
+              <ImageWithFallback
+                src="/about-me.jpg"
+                alt="Antonio Joshy"
+                className="w-full h-full object-cover aspect-square"
+              />
+            </div>
             <div className="absolute -bottom-6 -right-6 w-72 h-72 bg-navy-card rounded-2xl backdrop-blur-sm border border-bronze/10 -z-10" />
           </motion.div>
 

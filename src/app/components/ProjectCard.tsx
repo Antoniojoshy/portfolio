@@ -15,7 +15,7 @@ interface ProjectCardProps {
 
 export function ProjectCard({ title, description, image, tags, link, github, index }: ProjectCardProps) {
   const cardRef = useRef<HTMLDivElement>(null);
-  
+
   // Motion values for mouse position
   const x = useMotionValue(0);
   const y = useMotionValue(0);
@@ -31,11 +31,11 @@ export function ProjectCard({ title, description, image, tags, link, github, ind
   const handleMouseMove = (event: React.MouseEvent<HTMLDivElement>) => {
     if (!cardRef.current) return;
     const rect = cardRef.current.getBoundingClientRect();
-    
+
     // Calculate normalized mouse position (-0.5 to 0.5)
     const mouseX = (event.clientX - rect.left) / rect.width - 0.5;
     const mouseY = (event.clientY - rect.top) / rect.height - 0.5;
-    
+
     x.set(mouseX);
     y.set(mouseY);
   };
