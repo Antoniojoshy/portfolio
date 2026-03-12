@@ -83,7 +83,16 @@ export function ThreeDCarouselGallery() {
 
             {/* Carousel Container */}
             <div className="relative w-full flex items-center justify-center h-[450px] md:h-[550px] perspective-[1500px]">
-              <div className="relative w-full max-w-4xl flex items-center justify-center h-full">
+              <motion.div 
+                className="relative w-full max-w-4xl flex items-center justify-center h-full"
+                drag="x"
+                dragConstraints={{ left: 0, right: 0 }}
+                onDragEnd={(_, info) => {
+                  const threshold = 50;
+                  if (info.offset.x < -threshold) nextSlide();
+                  else if (info.offset.x > threshold) prevSlide();
+                }}
+              >
                 <AnimatePresence initial={false}>
                   {visibleIndices.map((idx, i) => {
                     const position = i - 2; // -2, -1, 0, 1, 2
@@ -105,17 +114,17 @@ export function ThreeDCarouselGallery() {
                         exit={{ opacity: 0, scale: 0.5 }}
                         transition={{ type: 'spring', stiffness: 300, damping: 30 }}
                         onClick={() => isCenter && setSelectedImage(photo.image)}
-                        className={`absolute w-[280px] md:w-[400px] h-[350px] md:h-[450px] rounded-2xl overflow-hidden cursor-pointer group shadow-2xl border border-white/10 bg-navy-card
+                        className={`absolute w-[280px] md:w-[400px] h-[350px] md:h-[450px] rounded-2xl overflow-hidden cursor-grab active:cursor-grabbing group shadow-2xl border border-white/10 bg-navy-card
                           ${isCenter ? 'ring-2 ring-bronze/50' : ''}`}
                       >
                         <ImageWithFallback
                           src={photo.image}
                           alt={photo.photographer}
-                          className="w-full h-full object-cover"
+                          className="w-full h-full object-cover pointer-events-none"
                         />
                         
                         {/* Shadow/Depth logic */}
-                        <div className="absolute inset-0 bg-navy-base/10 group-hover:bg-transparent transition-colors duration-500" />
+                        <div className="absolute inset-0 bg-navy-base/10 group-hover:bg-transparent transition-colors duration-500 pointer-events-none" />
                         
 
                         {/* Reflection effect */}
@@ -130,7 +139,7 @@ export function ThreeDCarouselGallery() {
                     );
                   })}
                 </AnimatePresence>
-              </div>
+              </motion.div>
 
               {/* Controls */}
               <button 

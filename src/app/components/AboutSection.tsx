@@ -1,14 +1,10 @@
-import React from 'react';
 import { motion } from 'motion/react';
-import { useInView } from 'motion/react';
 import { ImageWithFallback } from './figma/ImageWithFallback';
 
 export function AboutSection() {
-  const ref = React.useRef(null);
-  const isInView = useInView(ref, { once: true, amount: 0.3 });
 
   return (
-    <section id="about" ref={ref} className="relative py-32 bg-gradient-to-b from-navy-base via-navy-surface to-navy-base overflow-hidden">
+    <section id="about" className="relative py-32 bg-gradient-to-b from-navy-base via-navy-surface to-navy-base overflow-hidden">
       <div className="absolute inset-0 opacity-10">
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-bronze rounded-full blur-3xl opacity-20" />
         <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-bronze-light rounded-full blur-3xl opacity-10" />
@@ -16,8 +12,9 @@ export function AboutSection() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.3 }}
           transition={{ duration: 0.8 }}
           className="text-center mb-16"
         >
@@ -29,12 +26,13 @@ export function AboutSection() {
 
         <div className="grid md:grid-cols-2 gap-12 items-center">
           <motion.div
-            initial={{ opacity: 0, x: -50 }}
-            animate={isInView ? { opacity: 1, x: 0 } : {}}
+            initial={{ opacity: 0, x: -30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, amount: 0.3 }}
             transition={{ duration: 0.8, delay: 0.2 }}
             className="relative"
           >
-           <div className="relative rounded-2xl overflow-hidden">
+           <div className="relative rounded-2xl overflow-hidden shadow-2xl">
   <div className="absolute inset-0 bg-gradient-to-br from-bronze/20 to-transparent z-10 pointer-events-none" />
 
   <ImageWithFallback
@@ -47,8 +45,9 @@ export function AboutSection() {
           </motion.div>
 
           <motion.div
-            initial={{ opacity: 0, x: 50 }}
-            animate={isInView ? { opacity: 1, x: 0 } : {}}
+            initial={{ opacity: 0, x: 30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, amount: 0.3 }}
             transition={{ duration: 0.8, delay: 0.4 }}
             className="space-y-6"
           >
@@ -76,7 +75,8 @@ export function AboutSection() {
                 <motion.div
                   key={stat.label}
                   initial={{ opacity: 0, y: 20 }}
-                  animate={isInView ? { opacity: 1, y: 0 } : {}}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
                   transition={{ duration: 0.5, delay: 0.6 + index * 0.1 }}
                   className="bg-navy-card backdrop-blur-sm rounded-xl p-4 border border-navy-surface text-center"
                 >

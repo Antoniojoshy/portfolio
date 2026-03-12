@@ -1,11 +1,12 @@
 import React from 'react';
 import { motion, useScroll, useTransform } from 'motion/react';
-import { Github, Instagram, Mail, ArrowRight, Sparkles } from 'lucide-react';
-import { Hero3D } from './Hero3D';
+import { Github, Instagram, Mail, ArrowRight } from 'lucide-react';
+import { ParticleWaveBackground } from './ParticleWaveBackground';
 
 export function HeroSection() {
   const roles = ['AI Developer', 'Full Stack Developer', 'Photographer', 'Video Editor', 'DIY Engineer'];
   const [currentRole, setCurrentRole] = React.useState(0);
+  const [isHoveringTitle, setIsHoveringTitle] = React.useState(false);
   const { scrollY } = useScroll();
 
   // Parallax effect for content
@@ -24,10 +25,10 @@ export function HeroSection() {
   };
 
   return (
-    <section id="home" className="relative h-screen w-full flex items-center justify-center overflow-hidden bg-navy-base">
-      <Hero3D>{}</Hero3D>
+    <section id="home" className="relative h-screen w-full flex items-center justify-center overflow-hidden bg-[#020617]">
+      <ParticleWaveBackground isHovering={isHoveringTitle} />
 
-      <div className="absolute inset-0 bg-gradient-to-b from-navy-base/50 via-navy-base/30 to-navy-base/80 z-10" />
+      <div className="absolute inset-0 bg-gradient-to-b from-[#020617]/20 via-transparent to-[#0a0f1f]/90 z-10 pointer-events-none" />
 
       <motion.div
         initial={{ opacity: 0, y: 30 }}
@@ -40,26 +41,13 @@ export function HeroSection() {
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 1, delay: 0.8 }}
-          className="mb-6 relative"
+          className="mb-4 relative"
+          onMouseEnter={() => setIsHoveringTitle(true)}
+          onMouseLeave={() => setIsHoveringTitle(false)}
         >
-          <motion.div
-            animate={{ rotate: 360 }}
-            transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-            className="absolute -top-8 -right-8 text-bronze"
-          >
-            <Sparkles className="w-8 h-8" />
-          </motion.div>
-
-          <motion.div
-            animate={{ rotate: -360 }}
-            transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
-            className="absolute -bottom-4 -left-8 text-bronze-light"
-          >
-            <Sparkles className="w-6 h-6" />
-          </motion.div>
 
           <motion.h1
-            className="text-6xl md:text-8xl font-bold text-white mb-4"
+            className="text-4xl xs:text-5xl md:text-8xl font-bold text-white mb-4"
             whileHover={{ scale: 1.02 }}
             transition={{ type: "spring", stiffness: 300 }}
           >
@@ -83,14 +71,15 @@ export function HeroSection() {
           </motion.h1>
         </motion.div>
 
-        <div className="h-20 flex items-center justify-center">
+        {/* Role Text (Reverted to old design) */}
+        <div className="h-16 md:h-20 flex items-center justify-center">
           <motion.h2
             key={currentRole}
             initial={{ opacity: 0, y: 20, rotateX: -90 }}
             animate={{ opacity: 1, y: 0, rotateX: 0 }}
             exit={{ opacity: 0, y: -20, rotateX: 90 }}
             transition={{ duration: 0.6, type: "spring" }}
-            className="text-2xl md:text-4xl font-light text-slate-text"
+            className="text-xl md:text-4xl font-light text-slate-text uppercase tracking-[0.2em]"
             style={{ transformStyle: 'preserve-3d' }}
           >
             {roles[currentRole]}
@@ -101,7 +90,7 @@ export function HeroSection() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 1, delay: 1.2 }}
-          className="text-slate-text text-lg md:text-xl mb-12 max-w-2xl mx-auto leading-relaxed"
+          className="text-slate-text text-base md:text-xl mb-8 md:mb-12 max-w-2xl mx-auto leading-relaxed px-4"
         >
           Creative Technologist combining AI, web development, hardware systems, and visual storytelling to build real-world solutions
         </motion.p>
@@ -110,11 +99,11 @@ export function HeroSection() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 1.4 }}
-          className="flex flex-wrap gap-4 justify-center mb-12"
+          className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12"
         >
           <motion.button
             onClick={() => scrollToSection('projects')}
-            className="group relative px-8 py-4 bg-navy-card border border-bronze/30 text-white rounded-full overflow-hidden backdrop-blur-sm"
+            className="w-full sm:w-auto group relative px-8 py-4 bg-navy-card border border-bronze/30 text-white rounded-full overflow-hidden backdrop-blur-sm"
             whileHover={{ scale: 1.05, boxShadow: "0 0 30px rgba(197, 155, 118, 0.2)" }}
             whileTap={{ scale: 0.95 }}
           >
@@ -124,7 +113,7 @@ export function HeroSection() {
               whileHover={{ x: "0%" }}
               transition={{ duration: 0.3 }}
             />
-            <span className="relative flex items-center gap-2">
+            <span className="relative flex items-center justify-center gap-2">
               View Projects
               <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </span>
@@ -132,7 +121,7 @@ export function HeroSection() {
 
           <motion.button
             onClick={() => scrollToSection('contact')}
-            className="px-8 py-4 bg-navy-surface text-white rounded-full backdrop-blur-sm border border-navy-card relative overflow-hidden"
+            className="w-full sm:w-auto px-8 py-4 bg-navy-surface text-white rounded-full backdrop-blur-sm border border-navy-card relative overflow-hidden"
             whileHover={{
               scale: 1.05,
               borderColor: "rgba(197, 155, 118, 0.4)",
@@ -145,15 +134,16 @@ export function HeroSection() {
               whileHover={{ scale: 1.5, opacity: 1 }}
               transition={{ duration: 0.4 }}
             />
-            <span className="relative">Contact Me</span>
+            <span className="relative flex justify-center">Contact Me</span>
           </motion.button>
         </motion.div>
 
+        {/* Social Links (Centered row) */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 1, delay: 1.6 }}
-          className="flex gap-6 justify-center"
+          className="flex gap-8 md:gap-6 justify-center"
         >
           {[
             { icon: Github, href: 'https://github.com/Antoniojoshy', color: 'hover:text-bronze' },
@@ -163,9 +153,9 @@ export function HeroSection() {
             <motion.a
               key={index}
               href={social.href}
-             target="_blank"
+              target="_blank"
               rel="noopener noreferrer"
-              className={`p-3 bg-white/10 backdrop-blur-sm rounded-full transition-all duration-300 border border-white/20 group ${social.color}`}
+              className={`p-4 md:p-3 bg-white/10 backdrop-blur-sm rounded-full transition-all duration-300 border border-white/20 group ${social.color}`}
               whileHover={{
                 scale: 1.15,
                 rotate: 5,

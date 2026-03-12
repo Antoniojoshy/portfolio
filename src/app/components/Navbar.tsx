@@ -1,11 +1,18 @@
 import { useState, useEffect } from 'react';
-import { motion } from 'motion/react';
+import { motion, useScroll, useSpring } from 'motion/react';
 import { Menu, X } from 'lucide-react';
 
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
+
+  const { scrollYProgress } = useScroll();
+  const scaleX = useSpring(scrollYProgress, {
+    stiffness: 100,
+    damping: 30,
+    restDelta: 0.001
+  });
 
   useEffect(() => {
     const handleScroll = () => {
@@ -18,7 +25,6 @@ export function Navbar() {
       threshold: [0, 0.1],
     };
 
-    // Keep track of which sections are currently intersecting
     const intersectingSections = new Set<string>();
 
     const observerCallback = (entries: IntersectionObserverEntry[]) => {
@@ -30,7 +36,6 @@ export function Navbar() {
         }
       });
 
-      // From the sections that are currently intersecting, pick the one that is furthest down the page
       const sectionOrder = ['home', 'about', 'projects', 'skills', 'gallery', 'contact'];
       let highestIndex = -1;
       let mostRelevantSection = activeSection;
@@ -89,7 +94,7 @@ export function Navbar() {
           : 'bg-transparent'
           }`}
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto px-6 md:px-8">
           <div className="flex items-center justify-between h-16">
             <button
               onClick={() => scrollToSection('home')}
@@ -130,6 +135,12 @@ export function Navbar() {
             </button>
           </div>
         </div>
+        
+        {/* Scroll Progress Bar */}
+        <motion.div
+          className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-bronze to-bronze-light origin-left shadow-[0_0_10px_rgba(197,155,118,0.5)]"
+          style={{ scaleX }}
+        />
       </motion.nav>
 
       {/* Mobile Menu */}
